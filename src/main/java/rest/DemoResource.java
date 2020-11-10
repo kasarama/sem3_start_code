@@ -1,8 +1,14 @@
 package rest;
 
+import PackageFetch.DemoFetcher;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import entities.User;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeoutException;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,6 +34,9 @@ public class DemoResource {
 
     @Context
     SecurityContext securityContext;
+
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static ExecutorService threadPool = Executors.newCachedThreadPool();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,4 +77,14 @@ public class DemoResource {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("demoPackage")
+   
+    public String getDemoPackage() throws InterruptedException, ExecutionException, TimeoutException {
+       // String thisuser = securityContext.getUserPrincipal().getName();
+        return gson.toJson(DemoFetcher.returnPackage(gson, threadPool));
+    }
+    
 }

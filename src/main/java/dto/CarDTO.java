@@ -7,7 +7,7 @@ package dto;
  *
  * @author magda
  */
-class CarDTO {
+public class CarDTO {
     /*
     {"id":10,"name":"mimosa","year":2009,"color":"#F0C05A","pantone_value":"14-0848"}
     */
