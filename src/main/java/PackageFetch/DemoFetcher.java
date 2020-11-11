@@ -21,6 +21,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.HttpUtils;
 
 /**
@@ -33,8 +35,9 @@ public class DemoFetcher {
     private static String DEMO_CHUCK_URL = "https://api.chucknorris.io/jokes/random";
     private static String DEMO_DAD_URL = "https://icanhazdadjoke.com";
     private static String DEMO_MENTOR_URL = "http://dummy.restapiexample.com/api/v1/employee/1";
+    private static String DEMO_TARGET_URL = "https://jsonplaceholder.typicode.com/comments/2";
 
-    public static PackageDTO returnPackage(Gson gson, ExecutorService threadPool) throws InterruptedException, ExecutionException, TimeoutException {
+    public static PackageDTO returnPackage(Gson gson, ExecutorService threadPool) {
         Callable<CarDTO> carTask = new Callable<CarDTO>() {
             @Override
             public CarDTO call() throws IOException {
@@ -82,7 +85,9 @@ public class DemoFetcher {
         Callable<TargetDTO> targetTask = new Callable<TargetDTO>() {
             @Override
             public TargetDTO call() throws IOException {
-                String target = HttpUtils.fetchData(DEMO_MENTOR_URL);
+                String target = HttpUtils.fetchData(DEMO_TARGET_URL);
+                System.out.println("TARGET:");
+                System.out.println(target);
                 TargetDTO targetDTO = gson.fromJson(target, TargetDTO.class);
                 return targetDTO;
             }
@@ -90,11 +95,43 @@ public class DemoFetcher {
 
         Future<TargetDTO> futureTarget = threadPool.submit(targetTask);
 
-        CarDTO car = futureCar.get(2, TimeUnit.SECONDS);
-        ChuckDTO chuck = futureChuck.get(2, TimeUnit.SECONDS);
-        DadDTO dad = futureDad.get(2, TimeUnit.SECONDS);
-        MentorDTO mentor = futureMentor.get(2, TimeUnit.SECONDS);
-        TargetDTO target = futureTarget.get(2, TimeUnit.SECONDS);
+        CarDTO car;
+        try {
+            car = futureCar.get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            car = new CarDTO(0, "timeout", 0, "timeout", "daas");
+            ex.printStackTrace();
+
+        }
+        ChuckDTO chuck;
+        try {
+            chuck = futureChuck.get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            ex.printStackTrace();
+            chuck = new ChuckDTO("Timeout");
+        }
+        DadDTO dad;
+        try {
+            dad = futureDad.get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            dad = new DadDTO("Timeout");
+            ex.printStackTrace();
+
+        }
+        MentorDTO mentor;
+        try {
+            mentor = futureMentor.get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            mentor = new MentorDTO(0, "Timout", 0, 0, "Timout");
+        }
+        TargetDTO target;
+        try {
+            target = futureTarget.get(10, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            target = new TargetDTO(0, 0, "Timout", "Timout", "Timout");
+            ex.printStackTrace();
+
+        }
 
         return new PackageDTO(car, chuck, dad, mentor, target);
     }

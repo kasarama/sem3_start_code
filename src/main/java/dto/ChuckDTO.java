@@ -28,6 +28,10 @@ public class ChuckDTO {
         this.value = value;
     }
 
+    public ChuckDTO(String timeout) {
+        this.value=timeout;
+    }
+
     public String getId() {
         return id;
     }

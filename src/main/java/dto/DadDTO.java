@@ -19,6 +19,10 @@ public class DadDTO {
         this.status = status;
     }
 
+    public DadDTO(String timeout) {
+        this.joke=timeout;
+    }
+
     public String getJoke() {
         return joke;
     }

@@ -83,6 +83,7 @@ public class DemoResource {
     @Path("demoPackage")
    
     public String getDemoPackage() throws InterruptedException, ExecutionException, TimeoutException {
+        System.out.println("<Get demo pack");
        // String thisuser = securityContext.getUserPrincipal().getName();
         return gson.toJson(DemoFetcher.returnPackage(gson, threadPool));
     }
