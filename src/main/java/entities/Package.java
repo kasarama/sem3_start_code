@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -20,53 +21,55 @@ import javax.validation.constraints.NotNull;
  * @author magda
  */
 @Entity
+@Table(name = "package")
 public class Package implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     private String car;
     private String chuckJoke;
-    private String dadJoke;
     private String mentor;
     private String target;
-    @Basic(optional = false)
-    @NotNull
    
     @ManyToOne
     @JoinColumn(name = "user")
-    private User  user;
+    private User user;
 
     public Package() {
     }
+
+    public Package(Long id, String car, String chuckJoke, String mentor, String target, User user) {
+        this.id = id;
+        this.car = car;
+        this.chuckJoke = chuckJoke;
+        this.mentor = mentor;
+        this.target = target;
+        this.user = user;
+    }
+
     
-     public void setUser(User user) {
-        if(!user.getPacks().contains(this)){
+    public void setUser(User user) {
+        if (!user.getPacks().contains(this)) {
             user.addPack(this);
         }
         this.user = user;
     }
 
-    
-    
     public Package(String car) {
-        
+
         this.car = car;
         this.chuckJoke = car;
-        this.dadJoke = car;
+       
         this.mentor = car;
         this.target = car;
-      
+
     }
 
-   
     public User getUser() {
         return user;
     }
-    
-    
-    
-    
 
     public Long getId() {
         return id;
@@ -88,13 +91,7 @@ public class Package implements Serializable {
         this.chuckJoke = chuckJoke;
     }
 
-    public String getDadJoke() {
-        return dadJoke;
-    }
-
-    public void setDadJoke(String dadJoke) {
-        this.dadJoke = dadJoke;
-    }
+   
 
     public String getMentor() {
         return mentor;
@@ -112,5 +109,4 @@ public class Package implements Serializable {
         this.target = target;
     }
 
-  
 }

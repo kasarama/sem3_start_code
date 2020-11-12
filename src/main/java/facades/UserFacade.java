@@ -1,5 +1,7 @@
 package facades;
 
+import dto.PackageDTO;
+import dto.TamplePackDTO;
 import entities.Role;
 import entities.User;
 import java.util.logging.Level;
@@ -116,6 +118,29 @@ public class UserFacade {
         }
         return status;
     }
+     public PackageDTO newPack(TamplePackDTO tmpl, String user){
+         
+         
+          EntityManager em = emf.createEntityManager();
+        
+       
+        
+        try {                
+                em.getTransaction().begin();
+                
+                
+               
+                em.getTransaction().commit();
+                
+        } finally {
+            em.close();
+        }
+         
+         
+         
+         PackageDTO result= new PackageDTO();
+         return result;
+     }
    
          public static void main(String[] args) throws AuthenticationException {
         emf = EMF_Creator.createEntityManagerFactory();

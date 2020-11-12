@@ -42,6 +42,9 @@ public class PackageDTO {
         this.details = target.getDetails();
     }
 
+    public PackageDTO() {
+    }
+
     @Override
     public String toString() {
         return "PackageDTO{" + "year=" + year + ", plates=" + plates 
