@@ -121,7 +121,9 @@ public class DemoResource {
         System.out.println(category+car+target+mentor);
       //  return gson.toJson(USER_FACADE.newPack(tmpl, username, gson, threadPool))
         
-        return gson.toJson(USER_FACADE.newPack(new TamplePackDTO(category, car, mentor, target), username, gson, threadPool));
+        String what= gson.toJson(USER_FACADE.newPack(new TamplePackDTO(category, car, mentor, target), username, gson, threadPool));
+        System.out.println(what);
+        return what;
     }
 
 }

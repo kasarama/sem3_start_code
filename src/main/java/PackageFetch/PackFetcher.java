@@ -87,8 +87,7 @@ public class PackFetcher {
             @Override
             public TargetDTO call() throws IOException {
                 String target = HttpUtils.fetchData(DEMO_TARGET_URL+tmpl.getCommentId());
-                System.out.println("TARGET:");
-                System.out.println(target);
+            
                 TargetDTO targetDTO = gson.fromJson(target, TargetDTO.class);
                 return targetDTO;
             }
