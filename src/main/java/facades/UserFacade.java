@@ -1,9 +1,13 @@
 package facades;
 
+import PackageFetch.PackFetcher;
+import com.google.gson.Gson;
 import dto.PackageDTO;
 import dto.TamplePackDTO;
 import entities.Role;
 import entities.User;
+import entities.Package;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -118,34 +122,36 @@ public class UserFacade {
         }
         return status;
     }
-     public PackageDTO newPack(TamplePackDTO tmpl, String user){
+     public PackageDTO newPack(TamplePackDTO tmpl, String userName, Gson gson, ExecutorService threadPool) throws AuthenticationException{
          
          
           EntityManager em = emf.createEntityManager();
-        
        
-        
         try {                
                 em.getTransaction().begin();
-                
-                
+                 User user =em.find(User.class, userName);
+                 if(user==null){
+                     throw new AuthenticationException("Could not find user in data base");
+                 }
+       Package newPack = new Package(tmpl.getCarId(),tmpl.getCategory(),tmpl.getEmployeeId(),tmpl.getCommentId(), user);
+       em.persist(newPack);               
                
                 em.getTransaction().commit();
-                
         } finally {
             em.close();
         }
          
          
          
-         PackageDTO result= new PackageDTO();
+         PackageDTO result=PackFetcher.returnPackage(gson,threadPool,tmpl) ;
          return result;
      }
    
          public static void main(String[] args) throws AuthenticationException {
         emf = EMF_Creator.createEntityManagerFactory();
         UserFacade uf=UserFacade.getUserFacade(emf);
-             System.out.println(uf.changePass("Ola", "manola", "99999", uf));
+           // System.out.println(uf.changePass("Ola", "manola", "99999", uf));
+           //  System.out.println("pack: "+uf.newPack(new TamplePackDTO("a", "", "", ""), "user"));
         
     }
     

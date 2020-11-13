@@ -14,6 +14,7 @@ import dto.ForMentorDTO;
 import dto.MentorDTO;
 import dto.PackageDTO;
 import dto.TargetDTO;
+import dto.TamplePackDTO;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -29,19 +30,19 @@ import utils.HttpUtils;
  *
  * @author magda
  */
-public class DemoFetcher {
+public class PackFetcher {
 
-    private static String DEMO_CAR_URL = "https://reqres.in/api/car/1";
-    private static String DEMO_CHUCK_URL = "https://api.chucknorris.io/jokes/random";
+    private static String DEMO_CAR_URL = "https://reqres.in/api/car/";
+    private static String DEMO_CHUCK_URL = "https://api.chucknorris.io/jokes/";
     private static String DEMO_DAD_URL = "https://icanhazdadjoke.com";
-    private static String DEMO_MENTOR_URL = "http://dummy.restapiexample.com/api/v1/employee/1";
-    private static String DEMO_TARGET_URL = "https://jsonplaceholder.typicode.com/comments/2";
+    private static String DEMO_MENTOR_URL = "http://dummy.restapiexample.com/api/v1/employee/";
+    private static String DEMO_TARGET_URL = "https://jsonplaceholder.typicode.com/comments/";
 
-    public static PackageDTO returnPackage(Gson gson, ExecutorService threadPool) {
+    public static PackageDTO returnPackage(Gson gson, ExecutorService threadPool, TamplePackDTO tmpl) {
         Callable<CarDTO> carTask = new Callable<CarDTO>() {
             @Override
             public CarDTO call() throws IOException {
-                String forCar = HttpUtils.fetchData(DEMO_CAR_URL);
+                String forCar = HttpUtils.fetchData(DEMO_CAR_URL+tmpl.getCarId());
                 ForCarDTO forCarDTO = gson.fromJson(forCar, ForCarDTO.class);
                 return forCarDTO.getCar();
             }
@@ -52,7 +53,7 @@ public class DemoFetcher {
         Callable<ChuckDTO> chuckTask = new Callable<ChuckDTO>() {
             @Override
             public ChuckDTO call() throws IOException {
-                String chuck = HttpUtils.fetchData(DEMO_CHUCK_URL);
+                String chuck = HttpUtils.fetchData(DEMO_CHUCK_URL+tmpl.getCategory());
                 ChuckDTO chuckDTO = gson.fromJson(chuck, ChuckDTO.class);
                 return chuckDTO;
             }
@@ -74,7 +75,7 @@ public class DemoFetcher {
         Callable<MentorDTO> mentorTask = new Callable<MentorDTO>() {
             @Override
             public MentorDTO call() throws IOException {
-                String forMentor = HttpUtils.fetchData(DEMO_MENTOR_URL);
+                String forMentor = HttpUtils.fetchData(DEMO_MENTOR_URL+tmpl.getEmployeeId());
                 ForMentorDTO forMentorDTO = gson.fromJson(forMentor, ForMentorDTO.class);
                 return forMentorDTO.getMentor();
             }
@@ -85,7 +86,7 @@ public class DemoFetcher {
         Callable<TargetDTO> targetTask = new Callable<TargetDTO>() {
             @Override
             public TargetDTO call() throws IOException {
-                String target = HttpUtils.fetchData(DEMO_TARGET_URL);
+                String target = HttpUtils.fetchData(DEMO_TARGET_URL+tmpl.getCommentId());
                 System.out.println("TARGET:");
                 System.out.println(target);
                 TargetDTO targetDTO = gson.fromJson(target, TargetDTO.class);

@@ -40,13 +40,13 @@ public class Package implements Serializable {
     public Package() {
     }
 
-    public Package(Long id, String car, String chuckJoke, String mentor, String target, User user) {
-        this.id = id;
+    public Package( String car, String chuckJoke, String mentor, String target, User user) {
+       
         this.car = car;
         this.chuckJoke = chuckJoke;
         this.mentor = mentor;
         this.target = target;
-        this.user = user;
+        this.setUser(user);
     }
 
     
@@ -107,6 +107,11 @@ public class Package implements Serializable {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    @Override
+    public String toString() {
+        return "Package{" + "id=" + id + ", car=" + car + ", chuckJoke=" + chuckJoke + ", mentor=" + mentor + ", target=" + target + ", user=" + user + '}';
     }
 
 }
